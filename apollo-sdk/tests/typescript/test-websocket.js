@@ -31,6 +31,8 @@ async function testWebSocket() {
             reconnectAttempts: 3
         });
 
+        console.log(socket);
+        
         console.log('✅ WebSocket connection initiated\n');
 
         // Track streaming state

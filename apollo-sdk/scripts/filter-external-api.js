@@ -76,6 +76,47 @@ const externalOpenApi = {
     }
 };
 
+// Smart API key header detection and fixing
+// Scan external endpoints to find which API key headers are actually used
+const apiKeyHeaders = new Set();
+Object.values(externalPaths).forEach(pathItem => {
+    Object.values(pathItem).forEach(operation => {
+        if (operation.parameters) {
+            operation.parameters.forEach(param => {
+                if (param.in === 'header' && param.name && param.name.toLowerCase().includes('api-key')) {
+                    apiKeyHeaders.add(param.name);
+                }
+            });
+        }
+    });
+});
+
+// Handle security scheme based on what we found
+if (apiKeyHeaders.size > 0) {
+    console.log(`\n🔍 Detected API key headers in external endpoints: ${Array.from(apiKeyHeaders).join(', ')}`);
+    
+    if (apiKeyHeaders.size === 1) {
+        // All endpoints use the same header - update security scheme to match
+        const actualHeaderName = Array.from(apiKeyHeaders)[0];
+        if (externalOpenApi.components.securitySchemes?.APIKeyHeader) {
+            const oldName = externalOpenApi.components.securitySchemes.APIKeyHeader.name;
+            if (oldName !== actualHeaderName) {
+                externalOpenApi.components.securitySchemes.APIKeyHeader.name = actualHeaderName;
+                console.log(`✅ Fixed security scheme header: ${oldName} → ${actualHeaderName}`);
+            } else {
+                console.log(`✅ Security scheme header already correct: ${actualHeaderName}`);
+            }
+        }
+    } else {
+        // Multiple different headers used - remove global security scheme to avoid conflicts
+        console.log(`⚠️  Multiple API key headers detected. Removing global security scheme to avoid conflicts.`);
+        console.log(`   Each endpoint will use its own header parameter.`);
+        delete externalOpenApi.components.securitySchemes;
+    }
+} else {
+    console.log(`ℹ️  No API key headers found in external endpoint parameters.`);
+}
+
 // Add only the used schemas
 if (openApi.components?.schemas) {
     usedSchemas.forEach(schemaName => {

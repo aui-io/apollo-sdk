@@ -659,7 +659,7 @@
       "APIKeyHeader": {
         "type": "apiKey",
         "in": "header",
-        "name": "x-api-key"
+        "name": "x-network-api-key"
       }
     }
   }
