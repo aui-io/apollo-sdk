@@ -12,31 +12,65 @@ This guide is for DevOps teams to publish the Apollo SDK with **manually provide
 
 ## 🚀 Publishing the SDK
 
-### Option 1: Provide Tokens via Environment Variables (Recommended)
+### Option 1: TypeScript Only (Most Common) ⭐
+
+Publish only to npm (no Python SDK):
 
 ```bash
-# Navigate to project directory
+cd /Users/aui/AUI/apollo-sdk/apollo-sdk
+NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh
+```
+
+**Result:** ✅ TypeScript SDK published to npm, Python skipped
+
+---
+
+### Option 2: TypeScript + Python (Both)
+
+Publish to both npm and PyPI:
+
+```bash
+cd /Users/aui/AUI/apollo-sdk/apollo-sdk
+NPM_TOKEN="npm_YOUR_TOKEN_HERE" PYPI_TOKEN="pypi_YOUR_TOKEN_HERE" ./generate-and-publish.sh
+```
+
+**Result:** ✅ TypeScript SDK published to npm, ✅ Python SDK published to PyPI
+
+---
+
+### Option 3: Using Environment Variables (Multi-command sessions)
+
+If running multiple commands or want tokens available for the session:
+
+```bash
+# Set tokens
+export NPM_TOKEN="npm_YOUR_TOKEN_HERE"
+export PYPI_TOKEN="pypi_YOUR_TOKEN_HERE"  # Optional
+
+# Navigate to project
 cd /Users/aui/AUI/apollo-sdk/apollo-sdk
 
-# Set the NPM token (required)
-export NPM_TOKEN="npm_YOUR_TOKEN_HERE"
+# Run publish (tokens already set)
+./generate-and-publish.sh
 
-# Set the PyPI token (optional - only if publishing Python SDK)
-export PYPI_TOKEN="pypi_YOUR_TOKEN_HERE"
-
-# Run the publish script
+# Tokens remain set for the session
+# Run again if needed
 ./generate-and-publish.sh
 ```
 
-### Option 2: One-Line Command (Token expires after script)
+## 🤔 Token Behavior Summary
 
-```bash
-# Publish TypeScript SDK only (npm)
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh
+| NPM_TOKEN | PYPI_TOKEN | What Gets Published |
+|-----------|-----------|---------------------|
+| ✅ Provided | ❌ Not provided | ✅ TypeScript only (npm) |
+| ✅ Provided | ✅ Provided | ✅ TypeScript (npm) + Python (PyPI) |
+| ❌ Not provided | ❌ Not provided | ❌ Error - NPM_TOKEN required |
+| ❌ Not provided | ✅ Provided | ❌ Error - NPM_TOKEN required |
 
-# Publish both TypeScript and Python SDKs
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" PYPI_TOKEN="pypi_YOUR_TOKEN_HERE" ./generate-and-publish.sh
-```
+**Key Points:**
+- NPM_TOKEN is **always required** (TypeScript is the primary SDK)
+- PYPI_TOKEN is **optional** (Python SDK only published if token provided)
+- Script is smart - it won't fail if PYPI_TOKEN is missing, it just skips Python
 
 ## 📦 What Gets Published
 
