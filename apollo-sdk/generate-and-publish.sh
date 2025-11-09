@@ -421,12 +421,6 @@ if [ "$LOCAL_ONLY" = true ]; then
     echo ""
     echo -e "${GREEN}✅ SDKs generated locally in generated-sdks/${NC}"
     
-    # Patch WebSocket authentication (move API key from headers to query params)
-    echo ""
-    cd ../scripts
-    node patch-websocket-auth.js
-    cd ../fern
-    
     echo ""
     echo "📦 Local SDK paths:"
     echo "   - TypeScript: apollo-sdk/generated-sdks/typescript/"

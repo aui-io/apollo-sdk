@@ -9,7 +9,7 @@
     "test:all": "tsx test-tasks.js && tsx test-websocket.js"
   },
   "dependencies": {
-    "@aui.io/apollo-sdk": "^1.0.15",
+    "@aui.io/apollo-sdk": "^1.1.1",
     "tsx": "^4.7.0",
     "ws": "^8.18.0"
   },

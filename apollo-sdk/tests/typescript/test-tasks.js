@@ -1,4 +1,4 @@
-import { AuiApiClient } from '@aui.io/apollo-sdk';
+import { ApolloClient } from '@aui.io/apollo-sdk';
 
 // Configuration
 const API_KEY = process.env.API_KEY || 'API_KEY_01K92N5BD5M7239VRK7YTK4Y6N';
@@ -11,7 +11,7 @@ async function testGetMessages() {
     console.log(`Task ID: ${TASK_ID}\n`);
 
     // Initialize client with API key
-    const client = new AuiApiClient({
+    const client = new ApolloClient({
         baseUrl: BASE_URL,
         apiKey: API_KEY,
     });

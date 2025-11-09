@@ -1,4 +1,4 @@
-import { AuiApiClient } from '@aui.io/apollo-sdk';
+import { ApolloClient } from '@aui.io/apollo-sdk';
 
 // Configuration from environment or defaults
 const API_KEY = process.env.API_KEY || 'API_KEY_01K92N5BD5M7239VRK7YTK4Y6N';
@@ -17,7 +17,7 @@ async function testWebSocket() {
     console.log(`Message: ${MESSAGE_TEXT}\n`);
 
     // Initialize SDK client with API key
-    const client = new AuiApiClient({
+    const client = new ApolloClient({
         apiKey: API_KEY,
         // Uses default staging environment for WebSocket
     });
