@@ -34,7 +34,7 @@ export class ExternalSession {
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     ((await core.Supplier.get(this._options.environment)) ?? environments.AuiApiEnvironment.Default)
                         .staging,
-                "/api/v1/external/session",
+                "/ia-controller/api/v1/external/session",
             ),
             protocols: [],
             // WebSocket API requires API key as query parameter, not header
