@@ -3,7 +3,7 @@
 import type * as core from "../core/index.js";
 import { toJson } from "../core/json.js";
 
-export class AuiApiError extends Error {
+export class ApolloError extends Error {
     public readonly statusCode?: number;
     public readonly body?: unknown;
     public readonly rawResponse?: core.RawResponse;
@@ -20,7 +20,7 @@ export class AuiApiError extends Error {
         rawResponse?: core.RawResponse;
     }) {
         super(buildMessage({ message, statusCode, body }));
-        Object.setPrototypeOf(this, AuiApiError.prototype);
+        Object.setPrototypeOf(this, ApolloError.prototype);
         this.statusCode = statusCode;
         this.body = body;
         this.rawResponse = rawResponse;

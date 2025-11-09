@@ -2,14 +2,14 @@
 
 import * as core from "../../../../core/index.js";
 import { fromJson, toJson } from "../../../../core/json.js";
-import type * as AuiApi from "../../../index.js";
+import type * as Apollo from "../../../index.js";
 
 export declare namespace ExternalSessionSocket {
     export interface Args {
         socket: core.ReconnectingWebSocket;
     }
 
-    export type Response = AuiApi.StreamingUpdatePayload | AuiApi.FinalMessagePayload | AuiApi.ErrorMessagePayload;
+    export type Response = Apollo.StreamingUpdatePayload | Apollo.FinalMessagePayload | Apollo.ErrorMessagePayload;
     type EventHandlers = {
         open?: () => void;
         message?: (message: Response) => void;
@@ -67,7 +67,7 @@ export class ExternalSessionSocket {
         this.eventHandlers[event] = callback;
     }
 
-    public sendUserMessage(message: AuiApi.UserMessagePayload): void {
+    public sendUserMessage(message: Apollo.UserMessagePayload): void {
         this.assertSocketIsOpen();
         this.sendJson(message);
     }
@@ -130,7 +130,7 @@ export class ExternalSessionSocket {
     }
 
     /** Send a JSON payload to the websocket. */
-    protected sendJson(payload: AuiApi.UserMessagePayload): void {
+    protected sendJson(payload: Apollo.UserMessagePayload): void {
         const jsonPayload = toJson(payload);
         this.socket.send(jsonPayload);
     }

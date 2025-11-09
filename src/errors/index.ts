@@ -1,2 +1,2 @@
-export { AuiApiError } from "./AuiApiError.js";
-export { AuiApiTimeoutError } from "./AuiApiTimeoutError.js";
+export { ApolloError } from "./ApolloError.js";
+export { ApolloTimeoutError } from "./ApolloTimeoutError.js";

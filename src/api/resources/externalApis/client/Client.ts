@@ -5,7 +5,7 @@ import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.
 import * as core from "../../../../core/index.js";
 import * as environments from "../../../../environments.js";
 import * as errors from "../../../../errors/index.js";
-import * as AuiApi from "../../../index.js";
+import * as Apollo from "../../../index.js";
 
 export declare namespace ExternalApis {
     export interface Options extends BaseClientOptions {}
@@ -21,10 +21,10 @@ export class ExternalApis {
     }
 
     /**
-     * @param {AuiApi.GetTasksByUserIdApiV1ExternalTasksGetRequest} request
+     * @param {Apollo.GetTasksByUserIdApiV1ExternalTasksGetRequest} request
      * @param {ExternalApis.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link AuiApi.UnprocessableEntityError}
+     * @throws {@link Apollo.UnprocessableEntityError}
      *
      * @example
      *     await client.externalApis.getTasksByUserId({
@@ -34,16 +34,16 @@ export class ExternalApis {
      *     })
      */
     public getTasksByUserId(
-        request: AuiApi.GetTasksByUserIdApiV1ExternalTasksGetRequest,
+        request: Apollo.GetTasksByUserIdApiV1ExternalTasksGetRequest,
         requestOptions?: ExternalApis.RequestOptions,
-    ): core.HttpResponsePromise<AuiApi.ListExternalTasksResponse> {
+    ): core.HttpResponsePromise<Apollo.ListExternalTasksResponse> {
         return core.HttpResponsePromise.fromPromise(this.__getTasksByUserId(request, requestOptions));
     }
 
     private async __getTasksByUserId(
-        request: AuiApi.GetTasksByUserIdApiV1ExternalTasksGetRequest,
+        request: Apollo.GetTasksByUserIdApiV1ExternalTasksGetRequest,
         requestOptions?: ExternalApis.RequestOptions,
-    ): Promise<core.WithRawResponse<AuiApi.ListExternalTasksResponse>> {
+    ): Promise<core.WithRawResponse<Apollo.ListExternalTasksResponse>> {
         const { user_id: userId, page, size } = request;
         const _queryParams: Record<string, string | string[] | object | object[] | null> = {};
         _queryParams.user_id = userId;
@@ -66,7 +66,7 @@ export class ExternalApis {
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
-                    ((await core.Supplier.get(this._options.environment)) ?? environments.AuiApiEnvironment.Default)
+                    ((await core.Supplier.get(this._options.environment)) ?? environments.ApolloEnvironment.Default)
                         .base,
                 "api/v1/external/tasks",
             ),
@@ -80,18 +80,18 @@ export class ExternalApis {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as AuiApi.ListExternalTasksResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Apollo.ListExternalTasksResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 422:
-                    throw new AuiApi.UnprocessableEntityError(
-                        _response.error.body as AuiApi.HttpValidationError,
+                    throw new Apollo.UnprocessableEntityError(
+                        _response.error.body as Apollo.HttpValidationError,
                         _response.rawResponse,
                     );
                 default:
-                    throw new errors.AuiApiError({
+                    throw new errors.ApolloError({
                         statusCode: _response.error.statusCode,
                         body: _response.error.body,
                         rawResponse: _response.rawResponse,
@@ -101,15 +101,15 @@ export class ExternalApis {
 
         switch (_response.error.reason) {
             case "non-json":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     statusCode: _response.error.statusCode,
                     body: _response.error.rawBody,
                     rawResponse: _response.rawResponse,
                 });
             case "timeout":
-                throw new errors.AuiApiTimeoutError("Timeout exceeded when calling GET /api/v1/external/tasks.");
+                throw new errors.ApolloTimeoutError("Timeout exceeded when calling GET /api/v1/external/tasks.");
             case "unknown":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     message: _response.error.errorMessage,
                     rawResponse: _response.rawResponse,
                 });
@@ -117,10 +117,10 @@ export class ExternalApis {
     }
 
     /**
-     * @param {AuiApi.CreateExternalTaskRequest} request
+     * @param {Apollo.CreateExternalTaskRequest} request
      * @param {ExternalApis.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link AuiApi.UnprocessableEntityError}
+     * @throws {@link Apollo.UnprocessableEntityError}
      *
      * @example
      *     await client.externalApis.task({
@@ -128,16 +128,16 @@ export class ExternalApis {
      *     })
      */
     public task(
-        request: AuiApi.CreateExternalTaskRequest,
+        request: Apollo.CreateExternalTaskRequest,
         requestOptions?: ExternalApis.RequestOptions,
-    ): core.HttpResponsePromise<AuiApi.CreateExternalTaskResponse> {
+    ): core.HttpResponsePromise<Apollo.CreateExternalTaskResponse> {
         return core.HttpResponsePromise.fromPromise(this.__task(request, requestOptions));
     }
 
     private async __task(
-        request: AuiApi.CreateExternalTaskRequest,
+        request: Apollo.CreateExternalTaskRequest,
         requestOptions?: ExternalApis.RequestOptions,
-    ): Promise<core.WithRawResponse<AuiApi.CreateExternalTaskResponse>> {
+    ): Promise<core.WithRawResponse<Apollo.CreateExternalTaskResponse>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
             mergeOnlyDefinedHeaders({
@@ -149,7 +149,7 @@ export class ExternalApis {
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
-                    ((await core.Supplier.get(this._options.environment)) ?? environments.AuiApiEnvironment.Default)
+                    ((await core.Supplier.get(this._options.environment)) ?? environments.ApolloEnvironment.Default)
                         .base,
                 "api/v1/external/tasks",
             ),
@@ -166,18 +166,18 @@ export class ExternalApis {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as AuiApi.CreateExternalTaskResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Apollo.CreateExternalTaskResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 422:
-                    throw new AuiApi.UnprocessableEntityError(
-                        _response.error.body as AuiApi.HttpValidationError,
+                    throw new Apollo.UnprocessableEntityError(
+                        _response.error.body as Apollo.HttpValidationError,
                         _response.rawResponse,
                     );
                 default:
-                    throw new errors.AuiApiError({
+                    throw new errors.ApolloError({
                         statusCode: _response.error.statusCode,
                         body: _response.error.body,
                         rawResponse: _response.rawResponse,
@@ -187,15 +187,15 @@ export class ExternalApis {
 
         switch (_response.error.reason) {
             case "non-json":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     statusCode: _response.error.statusCode,
                     body: _response.error.rawBody,
                     rawResponse: _response.rawResponse,
                 });
             case "timeout":
-                throw new errors.AuiApiTimeoutError("Timeout exceeded when calling POST /api/v1/external/tasks.");
+                throw new errors.ApolloTimeoutError("Timeout exceeded when calling POST /api/v1/external/tasks.");
             case "unknown":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     message: _response.error.errorMessage,
                     rawResponse: _response.rawResponse,
                 });
@@ -206,7 +206,7 @@ export class ExternalApis {
      * @param {string} taskId
      * @param {ExternalApis.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link AuiApi.UnprocessableEntityError}
+     * @throws {@link Apollo.UnprocessableEntityError}
      *
      * @example
      *     await client.externalApis.getTaskMessages("task_id")
@@ -214,14 +214,14 @@ export class ExternalApis {
     public getTaskMessages(
         taskId: string,
         requestOptions?: ExternalApis.RequestOptions,
-    ): core.HttpResponsePromise<AuiApi.ExternalTaskMessage[]> {
+    ): core.HttpResponsePromise<Apollo.ExternalTaskMessage[]> {
         return core.HttpResponsePromise.fromPromise(this.__getTaskMessages(taskId, requestOptions));
     }
 
     private async __getTaskMessages(
         taskId: string,
         requestOptions?: ExternalApis.RequestOptions,
-    ): Promise<core.WithRawResponse<AuiApi.ExternalTaskMessage[]>> {
+    ): Promise<core.WithRawResponse<Apollo.ExternalTaskMessage[]>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
             mergeOnlyDefinedHeaders({
@@ -233,7 +233,7 @@ export class ExternalApis {
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
-                    ((await core.Supplier.get(this._options.environment)) ?? environments.AuiApiEnvironment.Default)
+                    ((await core.Supplier.get(this._options.environment)) ?? environments.ApolloEnvironment.Default)
                         .base,
                 `api/v1/external/tasks/${core.url.encodePathParam(taskId)}/messages`,
             ),
@@ -247,18 +247,18 @@ export class ExternalApis {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as AuiApi.ExternalTaskMessage[], rawResponse: _response.rawResponse };
+            return { data: _response.body as Apollo.ExternalTaskMessage[], rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 422:
-                    throw new AuiApi.UnprocessableEntityError(
-                        _response.error.body as AuiApi.HttpValidationError,
+                    throw new Apollo.UnprocessableEntityError(
+                        _response.error.body as Apollo.HttpValidationError,
                         _response.rawResponse,
                     );
                 default:
-                    throw new errors.AuiApiError({
+                    throw new errors.ApolloError({
                         statusCode: _response.error.statusCode,
                         body: _response.error.body,
                         rawResponse: _response.rawResponse,
@@ -268,17 +268,17 @@ export class ExternalApis {
 
         switch (_response.error.reason) {
             case "non-json":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     statusCode: _response.error.statusCode,
                     body: _response.error.rawBody,
                     rawResponse: _response.rawResponse,
                 });
             case "timeout":
-                throw new errors.AuiApiTimeoutError(
+                throw new errors.ApolloTimeoutError(
                     "Timeout exceeded when calling GET /api/v1/external/tasks/{task_id}/messages.",
                 );
             case "unknown":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     message: _response.error.errorMessage,
                     rawResponse: _response.rawResponse,
                 });
@@ -286,10 +286,10 @@ export class ExternalApis {
     }
 
     /**
-     * @param {AuiApi.SubmitExternalMessageRequest} request
+     * @param {Apollo.SubmitExternalMessageRequest} request
      * @param {ExternalApis.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link AuiApi.UnprocessableEntityError}
+     * @throws {@link Apollo.UnprocessableEntityError}
      *
      * @example
      *     await client.externalApis.message({
@@ -299,16 +299,16 @@ export class ExternalApis {
      *     })
      */
     public message(
-        request: AuiApi.SubmitExternalMessageRequest,
+        request: Apollo.SubmitExternalMessageRequest,
         requestOptions?: ExternalApis.RequestOptions,
-    ): core.HttpResponsePromise<AuiApi.ExternalTaskMessage> {
+    ): core.HttpResponsePromise<Apollo.ExternalTaskMessage> {
         return core.HttpResponsePromise.fromPromise(this.__message(request, requestOptions));
     }
 
     private async __message(
-        request: AuiApi.SubmitExternalMessageRequest,
+        request: Apollo.SubmitExternalMessageRequest,
         requestOptions?: ExternalApis.RequestOptions,
-    ): Promise<core.WithRawResponse<AuiApi.ExternalTaskMessage>> {
+    ): Promise<core.WithRawResponse<Apollo.ExternalTaskMessage>> {
         const { is_external_api: isExternalApi, ..._body } = request;
         const _queryParams: Record<string, string | string[] | object | object[] | null> = {};
         if (isExternalApi != null) {
@@ -326,7 +326,7 @@ export class ExternalApis {
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
-                    ((await core.Supplier.get(this._options.environment)) ?? environments.AuiApiEnvironment.Default)
+                    ((await core.Supplier.get(this._options.environment)) ?? environments.ApolloEnvironment.Default)
                         .base,
                 "api/v1/external/message",
             ),
@@ -343,18 +343,18 @@ export class ExternalApis {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as AuiApi.ExternalTaskMessage, rawResponse: _response.rawResponse };
+            return { data: _response.body as Apollo.ExternalTaskMessage, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 422:
-                    throw new AuiApi.UnprocessableEntityError(
-                        _response.error.body as AuiApi.HttpValidationError,
+                    throw new Apollo.UnprocessableEntityError(
+                        _response.error.body as Apollo.HttpValidationError,
                         _response.rawResponse,
                     );
                 default:
-                    throw new errors.AuiApiError({
+                    throw new errors.ApolloError({
                         statusCode: _response.error.statusCode,
                         body: _response.error.body,
                         rawResponse: _response.rawResponse,
@@ -364,15 +364,15 @@ export class ExternalApis {
 
         switch (_response.error.reason) {
             case "non-json":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     statusCode: _response.error.statusCode,
                     body: _response.error.rawBody,
                     rawResponse: _response.rawResponse,
                 });
             case "timeout":
-                throw new errors.AuiApiTimeoutError("Timeout exceeded when calling POST /api/v1/external/message.");
+                throw new errors.ApolloTimeoutError("Timeout exceeded when calling POST /api/v1/external/message.");
             case "unknown":
-                throw new errors.AuiApiError({
+                throw new errors.ApolloError({
                     message: _response.error.errorMessage,
                     rawResponse: _response.rawResponse,
                 });

@@ -1,6 +1,6 @@
 # Reference
 ## ExternalApis
-<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">getTasksByUserId</a>({ ...params }) -> AuiApi.ListExternalTasksResponse</code></summary>
+<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">getTasksByUserId</a>({ ...params }) -> Apollo.ListExternalTasksResponse</code></summary>
 <dl>
 <dd>
 
@@ -33,7 +33,7 @@ await client.externalApis.getTasksByUserId({
 <dl>
 <dd>
 
-**request:** `AuiApi.GetTasksByUserIdApiV1ExternalTasksGetRequest` 
+**request:** `Apollo.GetTasksByUserIdApiV1ExternalTasksGetRequest` 
     
 </dd>
 </dl>
@@ -53,7 +53,7 @@ await client.externalApis.getTasksByUserId({
 </dl>
 </details>
 
-<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">task</a>({ ...params }) -> AuiApi.CreateExternalTaskResponse</code></summary>
+<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">task</a>({ ...params }) -> Apollo.CreateExternalTaskResponse</code></summary>
 <dl>
 <dd>
 
@@ -84,7 +84,7 @@ await client.externalApis.task({
 <dl>
 <dd>
 
-**request:** `AuiApi.CreateExternalTaskRequest` 
+**request:** `Apollo.CreateExternalTaskRequest` 
     
 </dd>
 </dl>
@@ -104,7 +104,7 @@ await client.externalApis.task({
 </dl>
 </details>
 
-<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">getTaskMessages</a>(taskId) -> AuiApi.ExternalTaskMessage[]</code></summary>
+<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">getTaskMessages</a>(taskId) -> Apollo.ExternalTaskMessage[]</code></summary>
 <dl>
 <dd>
 
@@ -153,7 +153,7 @@ await client.externalApis.getTaskMessages("task_id");
 </dl>
 </details>
 
-<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">message</a>({ ...params }) -> AuiApi.ExternalTaskMessage</code></summary>
+<details><summary><code>client.externalApis.<a href="/src/api/resources/externalApis/client/Client.ts">message</a>({ ...params }) -> Apollo.ExternalTaskMessage</code></summary>
 <dl>
 <dd>
 
@@ -186,7 +186,7 @@ await client.externalApis.message({
 <dl>
 <dd>
 
-**request:** `AuiApi.SubmitExternalMessageRequest` 
+**request:** `Apollo.SubmitExternalMessageRequest` 
     
 </dd>
 </dl>

@@ -20,9 +20,9 @@ A full reference for this library is available [here](https://github.com/aui-io/
 Instantiate and use the client with the following:
 
 ```typescript
-import { AuiApiClient } from "@aui.io/apollo-sdk";
+import { ApolloClient } from "@aui.io/apollo-sdk";
 
-const client = new AuiApiClient({ apiKey: "YOUR_API_KEY", networkApiKey: "YOUR_NETWORK_API_KEY" });
+const client = new ApolloClient({ apiKey: "YOUR_API_KEY", networkApiKey: "YOUR_NETWORK_API_KEY" });
 await client.externalApis.task({
     user_id: "user_id"
 });
@@ -34,9 +34,9 @@ The SDK exports all request and response types as TypeScript interfaces. Simply 
 following namespace:
 
 ```typescript
-import { AuiApi } from "@aui.io/apollo-sdk";
+import { Apollo } from "@aui.io/apollo-sdk";
 
-const request: AuiApi.GetTasksByUserIdApiV1ExternalTasksGetRequest = {
+const request: Apollo.GetTasksByUserIdApiV1ExternalTasksGetRequest = {
     ...
 };
 ```
@@ -47,12 +47,12 @@ When the API returns a non-success status code (4xx or 5xx response), a subclass
 will be thrown.
 
 ```typescript
-import { AuiApiError } from "@aui.io/apollo-sdk";
+import { ApolloError } from "@aui.io/apollo-sdk";
 
 try {
     await client.externalApis.task(...);
 } catch (err) {
-    if (err instanceof AuiApiError) {
+    if (err instanceof ApolloError) {
         console.log(err.statusCode);
         console.log(err.message);
         console.log(err.body);
@@ -146,9 +146,9 @@ console.log(rawResponse.headers['X-My-Header']);
 The SDK supports logging. You can configure the logger by passing in a `logging` object to the client options.
 
 ```typescript
-import { AuiApiClient, logging } from "@aui.io/apollo-sdk";
+import { ApolloClient, logging } from "@aui.io/apollo-sdk";
 
-const client = new AuiApiClient({
+const client = new ApolloClient({
     ...
     logging: {
         level: logging.LogLevel.Debug, // defaults to logging.LogLevel.Info
@@ -224,9 +224,9 @@ The SDK provides a way for you to customize the underlying HTTP client / Fetch f
 unsupported environment, this provides a way for you to break glass and ensure the SDK works.
 
 ```typescript
-import { AuiApiClient } from "@aui.io/apollo-sdk";
+import { ApolloClient } from "@aui.io/apollo-sdk";
 
-const client = new AuiApiClient({
+const client = new ApolloClient({
     ...
     fetcher: // provide your implementation here
 });

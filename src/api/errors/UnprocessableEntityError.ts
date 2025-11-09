@@ -2,10 +2,10 @@
 
 import type * as core from "../../core/index.js";
 import * as errors from "../../errors/index.js";
-import type * as AuiApi from "../index.js";
+import type * as Apollo from "../index.js";
 
-export class UnprocessableEntityError extends errors.AuiApiError {
-    constructor(body: AuiApi.HttpValidationError, rawResponse?: core.RawResponse) {
+export class UnprocessableEntityError extends errors.ApolloError {
+    constructor(body: Apollo.HttpValidationError, rawResponse?: core.RawResponse) {
         super({
             message: "UnprocessableEntityError",
             statusCode: 422,

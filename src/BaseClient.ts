@@ -4,7 +4,7 @@ import type * as core from "./core/index.js";
 import type * as environments from "./environments.js";
 
 export interface BaseClientOptions {
-    environment?: core.Supplier<environments.AuiApiEnvironment | environments.AuiApiEnvironmentUrls>;
+    environment?: core.Supplier<environments.ApolloEnvironment | environments.ApolloEnvironmentUrls>;
     /** Specify a custom URL to connect the client to. */
     baseUrl?: core.Supplier<string>;
     apiKey?: core.Supplier<string | undefined>;

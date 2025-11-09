@@ -6,18 +6,18 @@ import type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
 import { mergeHeaders } from "./core/headers.js";
 import * as core from "./core/index.js";
 
-export declare namespace AuiApiClient {
+export declare namespace ApolloClient {
     export interface Options extends BaseClientOptions {}
 
     export interface RequestOptions extends BaseRequestOptions {}
 }
 
-export class AuiApiClient {
-    protected readonly _options: AuiApiClient.Options;
+export class ApolloClient {
+    protected readonly _options: ApolloClient.Options;
     protected _externalApis: ExternalApis | undefined;
     protected _externalSession: ExternalSession | undefined;
 
-    constructor(_options: AuiApiClient.Options = {}) {
+    constructor(_options: ApolloClient.Options = {}) {
         this._options = {
             ..._options,
             logging: core.logging.createLogger(_options?.logging),
@@ -26,8 +26,8 @@ export class AuiApiClient {
                     "x-network-api-key": _options?.networkApiKey,
                     "X-Fern-Language": "JavaScript",
                     "X-Fern-SDK-Name": "@aui.io/apollo-sdk",
-                    "X-Fern-SDK-Version": "1.0.16",
-                    "User-Agent": "@aui.io/apollo-sdk/1.0.16",
+                    "X-Fern-SDK-Version": "1.0.15",
+                    "User-Agent": "@aui.io/apollo-sdk/1.0.15",
                     "X-Fern-Runtime": core.RUNTIME.type,
                     "X-Fern-Runtime-Version": core.RUNTIME.version,
                 },
