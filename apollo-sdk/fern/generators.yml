@@ -26,23 +26,23 @@ groups:
           location: local-file-system
           path: ../generated-sdks/python
 
-  # Publish to npm (no GitHub required)
-  npm:
+  # Production - Publish to GitHub with automated npm/PyPI publishing
+  production:
     generators:
       - name: fernapi/fern-typescript-sdk
         version: 3.27.0
+        github:
+          repository: aui-io/apollo-sdk
         config:
           shouldGenerateWebsocketClients: true
         output:
           location: npm
           package-name: "@aui.io/apollo-sdk"
           token: ${NPM_TOKEN}
-
-  # Publish to PyPI (optional)
-  pypi:
-    generators:
       - name: fernapi/fern-python-sdk
         version: 4.32.2
+        github:
+          repository: aui-io/apollo-sdk
         config:
           should_generate_websocket_clients: true
         output:
@@ -50,19 +50,27 @@ groups:
           package-name: "aui-apollo-sdk"
           token: ${PYPI_TOKEN}
 
-  # Publish both (npm + PyPI)
-  publish-all:
+  # npm only (with GitHub)
+  npm:
     generators:
       - name: fernapi/fern-typescript-sdk
         version: 3.27.0
+        github:
+          repository: aui-io/apollo-sdk
         config:
           shouldGenerateWebsocketClients: true
         output:
           location: npm
           package-name: "@aui.io/apollo-sdk"
           token: ${NPM_TOKEN}
+
+  # PyPI only (with GitHub)
+  pypi:
+    generators:
       - name: fernapi/fern-python-sdk
         version: 4.32.2
+        github:
+          repository: aui-io/apollo-sdk
         config:
           should_generate_websocket_clients: true
         output:

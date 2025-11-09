@@ -23,7 +23,7 @@ servers:
 
 channels:
   external-session:
-    address: /api/v1/external/session
+    address: /ia-controller/api/v1/external/session
     description: WebSocket channel for real-time bidirectional communication with the agent
     messages:
       userMessage:

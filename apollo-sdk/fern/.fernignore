@@ -1,0 +1,11 @@
+# .fernignore
+# Files listed here will NOT be overwritten by Fern during SDK generation
+# This allows us to maintain custom fixes (like WebSocket query param auth)
+# until Fern adds native support
+
+# TypeScript WebSocket Client (custom query param auth fix)
+src/api/resources/externalSession/client/Client.ts
+
+# Python WebSocket Client (custom query param auth fix)
+src/aui/external_session/client.py
+

@@ -1,296 +1,235 @@
-# DevOps Publishing Guide - Apollo SDK
+# DevOps Guide: Apollo SDK Generation & Publishing
 
-## 🔐 Security-First Publishing
+This guide is for the DevOps team to generate and publish the Apollo SDK to npm and PyPI.
 
-This guide is for DevOps teams to publish the Apollo SDK with **manually provided tokens** for security.
+## 🎯 Overview
+
+The SDK generation is **fully automated** via a single script that:
+1. Fetches the latest OpenAPI spec from production
+2. Filters external-facing endpoints
+3. Generates TypeScript and Python SDKs
+4. Publishes to npm (and optionally PyPI)
+5. Tracks version information in `generatedSDK.json`
+
+**Key Feature**: WebSocket authentication fixes are automatically preserved via `.fernignore` and GitHub integration!
 
 ## 📋 Prerequisites
 
-- Access to npm account with publish rights to `@aui.io` organization
-- (Optional) Access to PyPI account for Python SDK publishing
-- Tokens should be generated fresh and rotated regularly
+### Required
+- **npm token**: For publishing to npm registry
+- **GitHub access**: Fern uses GitHub (`aui-io/apollo-sdk`) to preserve custom code
 
-## 🚀 Publishing the SDK
+### Optional
+- **PyPI token**: For Python SDK publishing (can skip if not needed)
 
-### Version Management 📊
+## 🚀 Publishing Commands
 
-The script supports three versioning modes:
-
-#### 1. Auto-Increment (Default) ⭐
-Let Fern automatically increment the patch version:
+### Option 1: Auto-increment Patch Version (Recommended)
 ```bash
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh
+NPM_TOKEN="your-npm-token" ./generate-and-publish.sh --patch
 ```
-**Result:** Fern auto-bumps patch (e.g., `0.0.53` → `0.0.54`)
+Example: `1.0.7` → `1.0.8`
 
-#### 2. Semantic Version Bumps (Recommended) 🎯
-Script automatically fetches current version and increments:
-
+### Option 2: Auto-increment Minor Version
 ```bash
-# Patch (bug fixes): 0.0.53 → 0.0.54
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh --patch
-
-# Minor (new features): 0.0.53 → 0.1.0
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh --minor
-
-# Major (breaking changes): 0.0.53 → 1.0.0
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh --major
+NPM_TOKEN="your-npm-token" ./generate-and-publish.sh --minor
 ```
+Example: `1.0.7` → `1.1.0`
 
-**How it works:**
-1. Script fetches current published version from npm
-2. Calculates new version based on semver rules
-3. Publishes with the calculated version
-
-**Edge Cases Handled:**
-- Package not found → Uses `0.0.0` as baseline
-- Invalid version format → Error with helpful message
-- Can't specify both `--version` and `--major/--minor/--patch`
-
-#### 3. Explicit Version
-For specific version numbers:
+### Option 3: Auto-increment Major Version
 ```bash
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh --version 1.2.3
+NPM_TOKEN="your-npm-token" ./generate-and-publish.sh --major
 ```
-**Result:** Publishes exactly `1.2.3`
+Example: `1.0.7` → `2.0.0`
 
----
-
-### Option 1: TypeScript Only (Most Common) ⭐
-
-Publish only to npm (no Python SDK):
-
+### Option 4: Specific Version
 ```bash
-cd /Users/aui/AUI/apollo-sdk/apollo-sdk
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh
+NPM_TOKEN="your-npm-token" ./generate-and-publish.sh --version 2.5.0
 ```
 
-**Result:** ✅ TypeScript SDK published to npm, Python skipped
-
----
-
-### Option 2: TypeScript + Python (Both)
-
-Publish to both npm and PyPI:
-
+### Option 5: Publish Both npm and PyPI
 ```bash
-cd /Users/aui/AUI/apollo-sdk/apollo-sdk
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" PYPI_TOKEN="pypi_YOUR_TOKEN_HERE" ./generate-and-publish.sh
+NPM_TOKEN="your-npm-token" PYPI_TOKEN="your-pypi-token" ./generate-and-publish.sh --patch
 ```
 
-**Result:** ✅ TypeScript SDK published to npm, ✅ Python SDK published to PyPI
+## 🔧 How It Works
 
----
+### GitHub Integration with `.fernignore`
 
-### Option 3: Using Environment Variables (Multi-command sessions)
+The SDK generation uses Fern's GitHub integration to preserve custom WebSocket fixes:
 
-If running multiple commands or want tokens available for the session:
+1. **Fern generates** SDK and commits to `aui-io/apollo-sdk`
+2. **`.fernignore` protects** our custom WebSocket authentication files:
+   - `src/api/resources/externalSession/client/Client.ts` (TypeScript)
+   - `src/aui/external_session/client.py` (Python)
+3. **Custom fixes preserved** - WebSocket query param auth works automatically!
+4. **Auto-publish** - npm and PyPI packages are published from GitHub
 
-```bash
-# Set tokens
-export NPM_TOKEN="npm_YOUR_TOKEN_HERE"
-export PYPI_TOKEN="pypi_YOUR_TOKEN_HERE"  # Optional
+### What Gets Fixed Automatically
 
-# Navigate to project
-cd /Users/aui/AUI/apollo-sdk/apollo-sdk
+Our `.fernignore` preserves the WebSocket authentication fix that moves the API key from headers to query parameters:
 
-# Run publish (tokens already set)
-./generate-and-publish.sh
-
-# Tokens remain set for the session
-# Run again if needed
-./generate-and-publish.sh
+**Before** (Fern's default):
+```javascript
+_url: 'wss://api.../session',
+_headers: { 'x-network-api-key': 'KEY' },  // ❌ Wrong
+_queryParameters: {}
 ```
 
-## 🤔 Token Behavior Summary
+**After** (Our custom fix):
+```javascript
+_url: 'wss://api.../session?network_api_key=KEY',  // ✅ Correct!
+_headers: {},
+_queryParameters: { network_api_key: 'KEY' }
+```
 
-| NPM_TOKEN | PYPI_TOKEN | What Gets Published |
-|-----------|-----------|---------------------|
-| ✅ Provided | ❌ Not provided | ✅ TypeScript only (npm) |
-| ✅ Provided | ✅ Provided | ✅ TypeScript (npm) + Python (PyPI) |
-| ❌ Not provided | ❌ Not provided | ❌ Error - NPM_TOKEN required |
-| ❌ Not provided | ✅ Provided | ❌ Error - NPM_TOKEN required |
+This fix is **automatically preserved** across all SDK regenerations!
 
-**Key Points:**
-- NPM_TOKEN is **always required** (TypeScript is the primary SDK)
-- PYPI_TOKEN is **optional** (Python SDK only published if token provided)
-- Script is smart - it won't fail if PYPI_TOKEN is missing, it just skips Python
-
-## 📦 What Gets Published
-
-### TypeScript SDK (npm)
-- **Package Name:** `@aui.io/apollo-sdk`
-- **Registry:** https://www.npmjs.com/package/@aui.io/apollo-sdk
-- **Install Command:** `npm install @aui.io/apollo-sdk`
-
-### Python SDK (PyPI) - Optional
-- **Package Name:** `aui-apollo-sdk`
-- **Registry:** https://pypi.org/project/aui-apollo-sdk/
-- **Install Command:** `pip install aui-apollo-sdk`
-
-## 🔄 Publishing Workflow
+## 📊 Version Management
 
 The script automatically:
-1. ✅ Fetches latest OpenAPI spec from production
-2. ✅ Filters to external-only endpoints
-3. ✅ Validates specifications (OpenAPI + AsyncAPI)
-4. ✅ Generates SDK using Fern
-5. ✅ Publishes to npm (and PyPI if token provided)
+- Fetches the current published version from npm
+- Calculates the next version based on your flag (`--patch`, `--minor`, `--major`)
+- Uses explicit version if you provide `--version X.Y.Z`
 
-## ⚙️ Script Options
+### Version Bump Types
 
-### Generate Locally Only (No Publishing)
-```bash
-./generate-and-publish.sh --local-only
-```
-SDKs will be generated to:
-- TypeScript: `apollo-sdk/generated-sdks/typescript/`
-- Python: `apollo-sdk/generated-sdks/python/`
-
-### Dry Run (Validate Without Publishing)
-```bash
-NPM_TOKEN="npm_YOUR_TOKEN_HERE" ./generate-and-publish.sh --dry-run
-```
-
-### Skip Publishing Step
-```bash
-./generate-and-publish.sh --skip-publish
-```
-
-## 🔑 Token Management
-
-### Getting NPM Token
-
-1. Login to https://www.npmjs.com/
-2. Go to **Access Tokens** in your profile
-3. Click **Generate New Token**
-4. Choose **Automation** type
-5. Copy the token (starts with `npm_`)
-
-**Important:** The token must have:
-- ✅ Publish access
-- ✅ Rights to the `@aui.io` organization
-
-### Getting PyPI Token (Optional)
-
-1. Login to https://pypi.org/
-2. Go to **Account Settings** → **API tokens**
-3. Click **Add API token**
-4. Set scope to "Entire account" or specific project
-5. Copy the token (starts with `pypi-`)
-
-## 🔒 Security Best Practices
-
-1. **Never commit tokens** to git or hardcode them in scripts
-2. **Use short-lived tokens** when possible
-3. **Rotate tokens regularly** (every 30-90 days)
-4. **Revoke tokens immediately** if compromised
-5. **Use CI/CD secrets** if running in automated pipelines
-6. **Limit token scope** to only what's needed (publish only)
-
-## 📊 Expected Output
-
-### Successful Publish
-```
-✅ SDK published successfully!
-
-📦 Published package:
-   - npm: @aui.io/apollo-sdk
-
-📚 Installation commands:
-   npm install @aui.io/apollo-sdk
-```
-
-### Errors to Watch For
-
-#### 401 Unauthorized
-- **Cause:** Invalid or expired token
-- **Fix:** Generate a new token
-
-#### 403 Forbidden
-- **Cause:** Token doesn't have publish rights
-- **Fix:** Use a token with publish permissions
-
-#### 404 Not Found (organization)
-- **Cause:** Wrong organization scope
-- **Fix:** Ensure you're publishing to `@aui.io` (not `@aui`)
-
-## 🐛 Troubleshooting
-
-### Clear npm cache if seeing permission errors:
-```bash
-npm cache clean --force
-```
-
-### Verify token has correct permissions:
-```bash
-npm token list
-```
-
-### Check published versions:
-```bash
-npm view @aui.io/apollo-sdk versions
-```
-
-## 📞 Support
-
-If you encounter issues:
-1. Check the error message in the script output
-2. Verify your token permissions
-3. Ensure you're using the correct organization scope (`@aui.io`)
-4. Contact the development team if issues persist
-
-## 🔄 Version Management
-
-The SDK version is auto-incremented by Fern with each publish. To check the current version:
-
-```bash
-npm view @aui.io/apollo-sdk version
-```
+| Flag | Current | New | Use Case |
+|------|---------|-----|----------|
+| `--patch` | 1.0.7 | 1.0.8 | Bug fixes, minor changes |
+| `--minor` | 1.0.7 | 1.1.0 | New features, backward compatible |
+| `--major` | 1.0.7 | 2.0.0 | Breaking changes |
+| `--version 2.5.0` | any | 2.5.0 | Specific version needed |
 
 ## 📄 SDK Version Tracking
 
-After each successful SDK generation/publish, the script automatically creates/updates `generatedSDK.json` with:
+After each successful publish, the script creates/updates `generatedSDK.json`:
 
-### File Location
-```
-apollo-sdk/generatedSDK.json
-```
-
-### File Contents (Example)
 ```json
 {
-  "generatedAt": "2025-11-06T13:30:00Z",
-  "generatedAtReadable": "November 06, 2025 at 01:30 PM UTC",
-  "version": "0.0.55",
+  "generatedAt": "2025-11-08T22:00:00Z",
+  "version": "1.0.8",
   "packages": {
     "npm": {
       "name": "@aui.io/apollo-sdk",
-      "version": "0.0.55",
+      "version": "1.0.8",
       "registry": "https://www.npmjs.com/package/@aui.io/apollo-sdk",
-      "install": "npm install @aui.io/apollo-sdk@0.0.55"
-    },
-    "pypi": {
-      "name": "aui-apollo-sdk",
-      "version": "0.0.55",
-      "registry": "https://pypi.org/project/aui-apollo-sdk",
-      "install": "pip install aui-apollo-sdk==0.0.55"
+      "install": "npm install @aui.io/apollo-sdk@1.0.8"
     }
   }
 }
 ```
 
-### Use Cases
-- **Documentation**: Track what version was last published
-- **CI/CD**: Reference in automated workflows
-- **Monitoring**: Check when SDKs were last updated
-- **Quick Reference**: Installation commands ready to copy
+This file is added to `.gitignore` and provides:
+- Quick reference for the latest version
+- Installation commands for team members
+- Timestamp of last publish
 
-**Note:** This file is auto-generated and overwritten with each run. It's ignored by git (`.gitignore`).
+## 🔒 Security Notes
+
+1. **NEVER commit tokens** to the repository
+2. **Provide tokens at runtime** via environment variables
+3. **npm token** is REQUIRED for publishing
+4. **PyPI token** is OPTIONAL (skips Python if not provided)
+
+### Setting Up npm Token
+
+1. Log into npmjs.com
+2. Go to Access Tokens → Generate New Token
+3. Choose "Automation" type
+4. Copy the token (starts with `npm_`)
+5. Use it in the command: `NPM_TOKEN="npm_..."`
+
+## 🎯 Common Workflows
+
+### Daily/Regular Releases (Patch)
+```bash
+# Most common: bug fixes and minor updates
+NPM_TOKEN="npm_..." ./generate-and-publish.sh --patch
+```
+
+### New Feature Release (Minor)
+```bash
+# New features, backward compatible
+NPM_TOKEN="npm_..." ./generate-and-publish.sh --minor
+```
+
+### Breaking Changes (Major)
+```bash
+# API changes that break backward compatibility
+NPM_TOKEN="npm_..." ./generate-and-publish.sh --major
+```
+
+### Emergency Hotfix (Specific Version)
+```bash
+# Need to publish a specific version
+NPM_TOKEN="npm_..." ./generate-and-publish.sh --version 1.0.9
+```
+
+## 📦 Local Testing
+
+To generate SDKs locally without publishing:
+
+```bash
+./generate-and-publish.sh --local-only
+```
+
+Generated SDKs will be in:
+- TypeScript: `apollo-sdk/generated-sdks/typescript/`
+- Python: `apollo-sdk/generated-sdks/python/`
+
+## ✅ Verification
+
+After publishing, verify the SDK:
+
+### Check npm
+```bash
+npm view @aui.io/apollo-sdk version
+npm install @aui.io/apollo-sdk@latest
+```
+
+### Check PyPI (if published)
+```bash
+pip show aui-apollo-sdk
+```
+
+### Test Installation
+```bash
+# TypeScript
+npm install @aui.io/apollo-sdk@1.0.8
+
+# Python
+pip install aui-apollo-sdk==1.0.8
+```
+
+## 🐛 Troubleshooting
+
+### Error: "npm error 401 Unauthorized"
+- Check that `NPM_TOKEN` is valid and not expired
+- Verify token has publish permissions
+
+### Error: "404 Not Found"
+- First publish requires the package name to be available
+- Verify `@aui.io` organization exists on npm
+
+### Error: "403 Forbidden - private packages"
+- Scoped packages (`@aui.io/...`) are private by default
+- The script automatically adds `--access public`
+
+### SDK Generated but WebSocket Not Working
+- This should NOT happen anymore with `.fernignore`
+- Verify `.fernignore` file exists in `fern/` directory
+- Check GitHub repo has the custom WebSocket files
+
+## 📞 Support
+
+For issues or questions:
+1. Check `generatedSDK.json` for last successful publish
+2. Review error messages in terminal output
+3. Contact the development team
 
 ---
 
-**Last Updated:** November 2025  
-**Script Location:** `/apollo-sdk/generate-and-publish.sh`  
-**Organization:** @aui.io
-
+**Last Updated**: November 8, 2025  
+**GitHub Repository**: https://github.com/aui-io/apollo-sdk  
+**npm Package**: https://www.npmjs.com/package/@aui.io/apollo-sdk

@@ -271,6 +271,11 @@ check_env_vars() {
             missing_vars+=("NPM_TOKEN")
         fi
         
+        # GitHub token is required for publishing (to preserve .fernignore fixes)
+        if [ -z "$GITHUB_TOKEN" ]; then
+            missing_vars+=("GITHUB_TOKEN")
+        fi
+        
         # PYPI token is optional - warn if not set
         if [ -z "$PYPI_TOKEN" ]; then
             echo -e "${YELLOW}⚠️  PYPI_TOKEN not set - Python package will NOT be published${NC}"
@@ -411,13 +416,17 @@ fi
 if [ "$LOCAL_ONLY" = true ]; then
     VERSION_ARG=$(build_version_arg)
     echo ""
-    echo "💻 Generating TypeScript SDK locally..."
-    fern generate --group typescript --log-level info $VERSION_ARG
-    echo ""
-    echo "💻 Generating Python SDK locally..."
-    fern generate --group python --log-level info $VERSION_ARG
+    echo "💻 Generating SDKs locally..."
+    fern generate --group local --log-level info $VERSION_ARG
     echo ""
     echo -e "${GREEN}✅ SDKs generated locally in generated-sdks/${NC}"
+    
+    # Patch WebSocket authentication (move API key from headers to query params)
+    echo ""
+    cd ../scripts
+    node patch-websocket-auth.js
+    cd ../fern
+    
     echo ""
     echo "📦 Local SDK paths:"
     echo "   - TypeScript: apollo-sdk/generated-sdks/typescript/"
@@ -458,8 +467,9 @@ if [ "$SKIP_PUBLISH" = false ]; then
     else
         # Determine which group to use based on available tokens
         VERSION_ARG=$(build_version_arg)
+        
         if [ -z "$PYPI_TOKEN" ]; then
-            echo "🚀 Publishing to npm only..."
+            echo "🚀 Publishing to npm only (via GitHub)..."
             echo -e "${YELLOW}⚠️  Skipping PyPI (PYPI_TOKEN not set)${NC}"
             echo ""
             fern generate --group npm --log-level info $VERSION_ARG
@@ -481,8 +491,8 @@ if [ "$SKIP_PUBLISH" = false ]; then
             echo ""
             save_sdk_version_info "$PUBLISHED_VERSION" false
         else
-            echo "🚀 Publishing to npm and PyPI..."
-            fern generate --group publish-all --log-level info $VERSION_ARG
+            echo "🚀 Publishing to npm and PyPI (via GitHub)..."
+            fern generate --group production --log-level info $VERSION_ARG
             
             echo ""
             echo -e "${GREEN}✅ SDKs published successfully!${NC}"
