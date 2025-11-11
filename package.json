@@ -1,6 +1,6 @@
 {
     "name": "@aui.io/aui-client",
-    "version": "1.1.11",
+    "version": "1.2.0",
     "private": false,
     "repository": "github:aui-io/aui-client",
     "type": "commonjs",
