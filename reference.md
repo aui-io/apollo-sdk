@@ -1,6 +1,6 @@
 # Reference
 ## ControllerApi
-<details><summary><code>client.controller_api.<a href="src/aui/controller_api/client.py">list_user_tasks</a>(...)</code></summary>
+<details><summary><code>client.controllerApi.<a href="/src/api/resources/controllerApi/client/Client.ts">listUserTasks</a>({ ...params }) -> Apollo.ListExternalTasksResponse</code></summary>
 <dl>
 <dd>
 
@@ -12,18 +12,12 @@
 <dl>
 <dd>
 
-```python
-from aui import ApolloClient
-
-client = ApolloClient(
-    network_api_key="YOUR_NETWORK_API_KEY",
-    api_key="YOUR_API_KEY",
-)
-client.controller_api.list_user_tasks(
-    user_id="user_id",
-    page=1,
-    size=1,
-)
+```typescript
+await client.controllerApi.listUserTasks({
+    user_id: "user_id",
+    page: 1,
+    size: 1
+});
 
 ```
 </dd>
@@ -39,7 +33,7 @@ client.controller_api.list_user_tasks(
 <dl>
 <dd>
 
-**user_id:** `str` 
+**request:** `Apollo.ListUserTasksRequest` 
     
 </dd>
 </dl>
@@ -47,23 +41,7 @@ client.controller_api.list_user_tasks(
 <dl>
 <dd>
 
-**page:** `typing.Optional[int]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**size:** `typing.Optional[int]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+**requestOptions:** `ControllerApi.RequestOptions` 
     
 </dd>
 </dl>
@@ -75,7 +53,7 @@ client.controller_api.list_user_tasks(
 </dl>
 </details>
 
-<details><summary><code>client.controller_api.<a href="src/aui/controller_api/client.py">create_task</a>(...)</code></summary>
+<details><summary><code>client.controllerApi.<a href="/src/api/resources/controllerApi/client/Client.ts">createTask</a>({ ...params }) -> Apollo.CreateExternalTaskResponse</code></summary>
 <dl>
 <dd>
 
@@ -87,16 +65,10 @@ client.controller_api.list_user_tasks(
 <dl>
 <dd>
 
-```python
-from aui import ApolloClient
-
-client = ApolloClient(
-    network_api_key="YOUR_NETWORK_API_KEY",
-    api_key="YOUR_API_KEY",
-)
-client.controller_api.create_task(
-    user_id="user_id",
-)
+```typescript
+await client.controllerApi.createTask({
+    user_id: "user_id"
+});
 
 ```
 </dd>
@@ -112,7 +84,7 @@ client.controller_api.create_task(
 <dl>
 <dd>
 
-**user_id:** `str` 
+**request:** `Apollo.CreateExternalTaskRequest` 
     
 </dd>
 </dl>
@@ -120,7 +92,7 @@ client.controller_api.create_task(
 <dl>
 <dd>
 
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+**requestOptions:** `ControllerApi.RequestOptions` 
     
 </dd>
 </dl>
@@ -132,7 +104,7 @@ client.controller_api.create_task(
 </dl>
 </details>
 
-<details><summary><code>client.controller_api.<a href="src/aui/controller_api/client.py">get_task_messages</a>(...)</code></summary>
+<details><summary><code>client.controllerApi.<a href="/src/api/resources/controllerApi/client/Client.ts">getTaskMessages</a>(taskId) -> Apollo.ExternalTaskMessage[]</code></summary>
 <dl>
 <dd>
 
@@ -144,16 +116,8 @@ client.controller_api.create_task(
 <dl>
 <dd>
 
-```python
-from aui import ApolloClient
-
-client = ApolloClient(
-    network_api_key="YOUR_NETWORK_API_KEY",
-    api_key="YOUR_API_KEY",
-)
-client.controller_api.get_task_messages(
-    task_id="task_id",
-)
+```typescript
+await client.controllerApi.getTaskMessages("task_id");
 
 ```
 </dd>
@@ -169,7 +133,7 @@ client.controller_api.get_task_messages(
 <dl>
 <dd>
 
-**task_id:** `str` 
+**taskId:** `string` 
     
 </dd>
 </dl>
@@ -177,7 +141,7 @@ client.controller_api.get_task_messages(
 <dl>
 <dd>
 
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+**requestOptions:** `ControllerApi.RequestOptions` 
     
 </dd>
 </dl>
@@ -189,7 +153,7 @@ client.controller_api.get_task_messages(
 </dl>
 </details>
 
-<details><summary><code>client.controller_api.<a href="src/aui/controller_api/client.py">send_message</a>(...)</code></summary>
+<details><summary><code>client.controllerApi.<a href="/src/api/resources/controllerApi/client/Client.ts">sendMessage</a>({ ...params }) -> Apollo.ExternalTaskMessage</code></summary>
 <dl>
 <dd>
 
@@ -201,18 +165,12 @@ client.controller_api.get_task_messages(
 <dl>
 <dd>
 
-```python
-from aui import ApolloClient
-
-client = ApolloClient(
-    network_api_key="YOUR_NETWORK_API_KEY",
-    api_key="YOUR_API_KEY",
-)
-client.controller_api.send_message(
-    is_external_api=True,
-    task_id="task_id",
-    text="text",
-)
+```typescript
+await client.controllerApi.sendMessage({
+    is_external_api: true,
+    task_id: "task_id",
+    text: "text"
+});
 
 ```
 </dd>
@@ -228,7 +186,7 @@ client.controller_api.send_message(
 <dl>
 <dd>
 
-**task_id:** `str` 
+**request:** `Apollo.SubmitExternalMessageRequest` 
     
 </dd>
 </dl>
@@ -236,31 +194,7 @@ client.controller_api.send_message(
 <dl>
 <dd>
 
-**text:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**is_external_api:** `typing.Optional[bool]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**context:** `typing.Optional[Context]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+**requestOptions:** `ControllerApi.RequestOptions` 
     
 </dd>
 </dl>
@@ -271,4 +205,3 @@ client.controller_api.send_message(
 </dd>
 </dl>
 </details>
-
