@@ -1,0 +1,9 @@
+{
+    "cliVersion": "0.108.0",
+    "generatorName": "fernapi/fern-typescript-sdk",
+    "generatorVersion": "3.28.7",
+    "generatorConfig": {
+        "namespaceExport": "Apollo",
+        "shouldGenerateWebsocketClients": true
+    }
+}
