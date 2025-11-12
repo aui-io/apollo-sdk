@@ -60,7 +60,7 @@ const userTasks = await client.externalApis.getTasksByUserId({
 
 ```typescript
 // Connect to WebSocket
-const socket = await client.apolloSession.connect();
+const socket = await client.apolloWsSession.connect();
 
 // Listen for connection open
 socket.on('open', () => {
@@ -201,13 +201,13 @@ const response = await client.externalApis.getTasksByUserId({
 
 ### WebSocket API
 
-All WebSocket methods are accessed via `client.apolloSession.*`
+All WebSocket methods are accessed via `client.apolloWsSession.*`
 
 #### `connect(args?)` - Establish Connection
 Connect to the WebSocket for real-time communication.
 
 ```typescript
-const socket = await client.externalSession.connect({
+const socket = await client.apolloWsSession.connect({
     headers?: Record<string, string>,  // Additional headers
     debug?: boolean,                   // Enable debug mode (default: false)
     reconnectAttempts?: number         // Max reconnect attempts (default: 30)
@@ -278,7 +278,7 @@ async function searchProducts(userId: string, query: string) {
     console.log('Created task:', taskId);
     
     // Step 2: Connect to WebSocket
-    const socket = await client.externalSession.connect();
+    const socket = await client.apolloWsSession.connect();
     
     // Step 3: Set up event handlers
     socket.on('open', () => {
@@ -485,7 +485,7 @@ const client = new ApolloClient({
 });
 
 // Or pass it per-request
-const socket = await client.externalSession.connect({
+const socket = await client.apolloWsSession.connect({
     headers: {
         'x-network-api-key': 'API_KEY_YOUR_KEY_HERE'
     }
