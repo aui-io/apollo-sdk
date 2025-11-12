@@ -4,9 +4,9 @@ import type { BaseClientOptions } from "../../../../BaseClient.js";
 import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
 import * as core from "../../../../core/index.js";
 import * as environments from "../../../../environments.js";
-import { ApolloSessionSocket } from "./Socket.js";
+import { ApolloWsSessionSocket } from "./Socket.js";
 
-export declare namespace ApolloSession {
+export declare namespace ApolloWsSession {
     export interface Options extends BaseClientOptions {}
 
     export interface ConnectArgs {
@@ -19,14 +19,14 @@ export declare namespace ApolloSession {
     }
 }
 
-export class ApolloSession {
-    protected readonly _options: ApolloSession.Options;
+export class ApolloWsSession {
+    protected readonly _options: ApolloWsSession.Options;
 
-    constructor(_options: ApolloSession.Options = {}) {
+    constructor(_options: ApolloWsSession.Options = {}) {
         this._options = _options;
     }
 
-    public async connect(args: ApolloSession.ConnectArgs = {}): Promise<ApolloSessionSocket> {
+    public async connect(args: ApolloWsSession.ConnectArgs = {}): Promise<ApolloWsSessionSocket> {
         const { headers, debug, reconnectAttempts } = args;
         const _headers: Record<string, unknown> = mergeHeaders(
             mergeOnlyDefinedHeaders({ ...(await this._getCustomAuthorizationHeaders()) }),
@@ -44,7 +44,7 @@ export class ApolloSession {
             headers: _headers,
             options: { debug: debug ?? false, maxRetries: reconnectAttempts ?? 30 },
         });
-        return new ApolloSessionSocket({ socket });
+        return new ApolloWsSessionSocket({ socket });
     }
 
     protected async _getCustomAuthorizationHeaders(): Promise<Record<string, string | undefined>> {

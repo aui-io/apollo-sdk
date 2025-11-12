@@ -3,20 +3,21 @@
 export interface ProductParameter {
     /** Parameter name */
     title: string;
-    /** Parameter value */
+    /** Parameter value (can be string, number, array, or object) */
     value: ProductParameter.Value;
     type: ProductParameter.Type;
 }
 
 export namespace ProductParameter {
     /**
-     * Parameter value
+     * Parameter value (can be string, number, array, or object)
      */
-    export type Value = string | number | unknown[];
+    export type Value = string | number | unknown[] | Record<string, unknown>;
     export const Type = {
         String: "string",
         Numeric: "numeric",
         Array: "array",
+        Object: "object",
     } as const;
     export type Type = (typeof Type)[keyof typeof Type];
 }

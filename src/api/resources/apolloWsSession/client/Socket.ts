@@ -4,7 +4,7 @@ import * as core from "../../../../core/index.js";
 import { fromJson, toJson } from "../../../../core/json.js";
 import type * as Apollo from "../../../index.js";
 
-export declare namespace ApolloSessionSocket {
+export declare namespace ApolloWsSessionSocket {
     export interface Args {
         socket: core.ReconnectingWebSocket;
     }
@@ -18,16 +18,16 @@ export declare namespace ApolloSessionSocket {
     };
 }
 
-export class ApolloSessionSocket {
+export class ApolloWsSessionSocket {
     public readonly socket: core.ReconnectingWebSocket;
-    protected readonly eventHandlers: ApolloSessionSocket.EventHandlers = {};
+    protected readonly eventHandlers: ApolloWsSessionSocket.EventHandlers = {};
     private handleOpen: () => void = () => {
         this.eventHandlers.open?.();
     };
     private handleMessage: (event: { data: string }) => void = (event) => {
         const data = fromJson(event.data);
 
-        this.eventHandlers.message?.(data as ApolloSessionSocket.Response);
+        this.eventHandlers.message?.(data as ApolloWsSessionSocket.Response);
     };
     private handleClose: (event: core.CloseEvent) => void = (event) => {
         this.eventHandlers.close?.(event);
@@ -37,7 +37,7 @@ export class ApolloSessionSocket {
         this.eventHandlers.error?.(new Error(message));
     };
 
-    constructor(args: ApolloSessionSocket.Args) {
+    constructor(args: ApolloWsSessionSocket.Args) {
         this.socket = args.socket;
         this.socket.addEventListener("open", this.handleOpen);
         this.socket.addEventListener("message", this.handleMessage);
@@ -60,9 +60,9 @@ export class ApolloSessionSocket {
      * });
      * ```
      */
-    public on<T extends keyof ApolloSessionSocket.EventHandlers>(
+    public on<T extends keyof ApolloWsSessionSocket.EventHandlers>(
         event: T,
-        callback: ApolloSessionSocket.EventHandlers[T],
+        callback: ApolloWsSessionSocket.EventHandlers[T],
     ): void {
         this.eventHandlers[event] = callback;
     }
@@ -73,7 +73,7 @@ export class ApolloSessionSocket {
     }
 
     /** Connect to the websocket and register event handlers. */
-    public connect(): ApolloSessionSocket {
+    public connect(): ApolloWsSessionSocket {
         this.socket.reconnect();
 
         this.socket.addEventListener("open", this.handleOpen);
